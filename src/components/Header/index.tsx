@@ -1,18 +1,19 @@
 import React from "react";
+import styles from './Header.modules.scss'
 
 const Header: React.FC = () => {
     return (
         <header>
-            <div className="headerLeft">
+            <div className={styles.headerLeft}>
                 <img width={40} height={40} src="/img/logo.svg" />
                 <div className="headerInfo">
-                    <h3 className="text-uppercase">You in style</h3>
+                    <h3 className={styles.text_uppercase}>You in style</h3>
                     <p>Street fashion</p>
                 </div>
 
             </div>
-            <ul className="headerRight">
-                <li className="mr-30">
+            <ul className={styles.headerRight}>
+                <li className={styles.mr_30}>
                     <img width={18} height={18} src="/img/cart.svg" />
                     <span> $450 </span>
                 </li>
