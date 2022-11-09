@@ -1,7 +1,7 @@
 import React from "react";
 import styles from './Header.modules.scss'
 
-const Header: React.FC = () => {
+const Header: React.FC<any> = ({ onClickCart }) => {
     return (
         <header>
             <div className={styles.headerLeft}>
@@ -13,7 +13,9 @@ const Header: React.FC = () => {
 
             </div>
             <ul className={styles.headerRight}>
-                <li className={styles.mr_30}>
+                <li
+                    onClick={onClickCart}
+                    className={styles.mr_30}>
                     <img width={18} height={18} src="/img/cart.svg" />
                     <span> $450 </span>
                 </li>

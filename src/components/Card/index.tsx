@@ -3,11 +3,30 @@ import styles from './Card.modules.scss';
 
 console.log(styles);
 const Card: React.FC<any> = (props) => {
+    const [isAdded, setIsAdded] = React.useState(false);
+    const [favorite, setFavorite] = React.useState(false);
+
+    const onClickPlus = () => {
+        setIsAdded(!isAdded);
+    };
+
+    const onClickFavorite = () => {
+        setFavorite(!favorite);
+    };
+
+    // React.useEffect(() => {
+    //     console.log('Variable has changed!');
+    // }, [isAdded, favorite]);
+
     return (
         <div className={styles.card}>
-            <div className={styles.favorite}>
-                <img width={15} height={15} src="/img/heart_unclicked.svg" alt="Unclicked" />
-            </div>
+            <img
+                className={styles.favorite}
+                onClick={onClickFavorite}
+                width={15} height={15}
+                src={favorite ? "/img/heart_clicked.svg" : "/img/heart_unclicked.svg"}
+                alt="Unclicked" />
+
             <img width={170} height={170} src={props.imageUrl} alt="Sneakers" />
             <h5>{props.title}</h5>
             <div className={styles.cardButtom}>
@@ -15,9 +34,12 @@ const Card: React.FC<any> = (props) => {
                     <span>Price: </span>
                     <b>${props.price}</b>
                 </div>
-                <button className={styles.button} onClick={props.onClick}>
-                    <img width={11} height={11} src="/img/plus.svg" alt="Plus" />
-                </button>
+                <img
+                    className={styles.plus}
+                    onClick={onClickPlus}
+                    width={15} height={15}
+                    src={isAdded ? "/img/check.svg" : "/img/plus.svg"}
+                    alt="Plus" />
             </div>
         </div>
     )

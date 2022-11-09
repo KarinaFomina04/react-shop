@@ -4,22 +4,25 @@ import Drawer from "../Drawer";
 import Header from "../Header";
 import styles from './App.modules.scss';
 
-const arr = [{ title:'Мужские Кроссовки NIke', price: '120', imageUrl: "/img/sneackers/1.jpg" },
-{ title: 'Мужские Кроссовки NIke Air Max', price: '130', imageUrl: "/img/sneackers/2.jpg" },
-{ title: 'Мужские Кроссовки NIke 3000', price: '175', imageUrl: "/img/sneackers/3.jpg" },
-{ title: 'Мужские Кроссовки NIke Air Max Plus', price: '156', imageUrl: "/img/sneackers/4.jpg" }];
-
 
 const App: React.FC = () => {
+    const [items, setItems] = React.useState([]);
+    const [cartOpened, setCartOpened] = React.useState(false);
+
+    React.useEffect(() => {
+        fetch('https://6366ecd1f5f549f052ce631b.mockapi.io/items')
+            .then((res) => {
+                return res.json();
+            })
+            .then((json) => {
+                setItems(json)
+            });
+    }, []);
+
     return (
         <div className={styles.wrapper}>
-            <div className="button_style">
-                <h1>0</h1>
-                <button>+</button>
-                <button>-</button>
-            </div>   
-            <Drawer />
-            <Header />
+            {cartOpened && <Drawer onClose={() => setCartOpened(false)} />}
+            <Header onClickCart={() => setCartOpened(true)} />
             <div className={styles.content}>
                 <div className={styles.titleWithSearch}>
                     <h1>All</h1>
@@ -30,14 +33,15 @@ const App: React.FC = () => {
                     </div>
                 </div>
                 <div className={styles.sneakers}>
-                    {arr.map(obj =>
+                    {items.map((obj: any) =>
                         <Card
                             title={obj.title}
                             price={obj.price}
-                            imageUrl={obj.imageUrl} 
-                            onClick={() => console.log(obj)}/>  
+                            imageUrl={obj.imageUrl}
+                            onClickFavorite={() => console.log('Add to favorites')}
+                            onClickPLus={() => console.log('Click plus')} />
                     )}
-                
+
                 </div>
             </div>
         </div>

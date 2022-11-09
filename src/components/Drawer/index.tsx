@@ -1,30 +1,37 @@
 import React from "react";
-import style from './Drawer.modules.scss'
+import styles from './Drawer.modules.scss'
 
-const Drawer: React.FC = () => {
+const Drawer: React.FC<any> = ({ onClose }) => {
     return (
-        <div className={style.overlay}>
-            <div className={style.drawer}>
-                <h2>Cart <img className={style.removeBtn} width={11} height={11} src="/img/btn-remove.svg" alt="Remove" /></h2>
-                <div className={style.items}>
-                    <div className={style.cartItem}>
-                        <img className={style.cartImage} width={70} height={70} src="/img/sneackers/1.jpg" alt="Sneackers" />
-                        <div className={style.cartInfo}>
+        <div className={styles.overlay}>
+            <div className={styles.drawer}>
+                <h2>
+                    Cart
+                    <img
+                        onClick={onClose}
+                        className={styles.removeBtn}
+                        width={11} height={11}
+                        src="/img/btn-remove.svg" alt="Close" />
+                </h2>
+                <div className={styles.items}>
+                    <div className={styles.cartItem}>
+                        <img className={styles.cartImage} width={70} height={70} src="/img/sneackers/1.jpg" alt="Sneackers" />
+                        <div className={styles.cartInfo}>
                             <p>Buty męskie New Balance Numeric NM1010PW – czarne</p>
                             <b>$120</b>
                         </div>
-                        <img className={style.removeBtn} width={11} height={11} src="/img/btn-remove.svg" alt="Remove" />
+                        <img className={styles.removeBtn} width={11} height={11} src="/img/btn-remove.svg" alt="Remove" />
                     </div>
-                    <div className={style.cartItem}>
-                        <img className={style.cartImage} width={70} height={70} src="/img/sneackers/2.jpg" alt="Sneackers" />
-                        <div className={style.cartInfo}>
+                    <div className={styles.cartItem}>
+                        <img className={styles.cartImage} width={70} height={70} src="/img/sneackers/2.jpg" alt="Sneackers" />
+                        <div className={styles.cartInfo}>
                             <p>Buty męskie New Balance Numeric NM1010PW – czarne</p>
                             <b>$120</b>
                         </div>
-                        <img className={style.removeBtn} width={11} height={11} src="/img/btn-remove.svg" alt="Remove" />
+                        <img className={styles.removeBtn} width={11} height={11} src="/img/btn-remove.svg" alt="Remove" />
                     </div>
                 </div>
-                <div className={style.cartTotalBlock}>
+                <div className={styles.cartTotalBlock}>
                     <ul>
                         <li>
                             <span>Total:</span>
@@ -37,7 +44,9 @@ const Drawer: React.FC = () => {
                             <b>$22.5</b>
                         </li>
                     </ul>
-                    <button className={style.greenButton}>Checkout <img width={25} height={25} src="/img/right-arrow.svg" alt="Arrow" /></button>
+                    <button className={styles.greenButton}>
+                        Checkout <img width={25} height={25} src="/img/right-arrow.svg" alt="Arrow" />
+                    </button>
                 </div>
             </div>
         </div>
