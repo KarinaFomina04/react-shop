@@ -7,6 +7,7 @@ import styles from './App.modules.scss';
 
 const App: React.FC = () => {
     const [items, setItems] = React.useState([]);
+    const [cartItems, setCartItems] = React.useState<TItem[]>([]);
     const [cartOpened, setCartOpened] = React.useState(false);
 
     React.useEffect(() => {
@@ -19,9 +20,19 @@ const App: React.FC = () => {
             });
     }, []);
 
+    type TItem = { 
+        title: string; 
+        imageUrl: string; 
+        price: number; 
+    };
+
+    const onAddToCart = (obj: TItem) => {
+        setCartItems([...cartItems, obj]);
+    };
+    console.log(cartItems)
     return (
         <div className={styles.wrapper}>
-            {cartOpened && <Drawer onClose={() => setCartOpened(false)} />}
+            {cartOpened && <Drawer items={cartItems} onClose={() => setCartOpened(false)} />}
             <Header onClickCart={() => setCartOpened(true)} />
             <div className={styles.content}>
                 <div className={styles.titleWithSearch}>
@@ -33,13 +44,13 @@ const App: React.FC = () => {
                     </div>
                 </div>
                 <div className={styles.sneakers}>
-                    {items.map((obj: any) =>
+                    {items.map((item: any) =>
                         <Card
-                            title={obj.title}
-                            price={obj.price}
-                            imageUrl={obj.imageUrl}
+                            title={item.title}
+                            price={item.price}
+                            imageUrl={item.imageUrl}
                             onClickFavorite={() => console.log('Add to favorites')}
-                            onClickPLus={() => console.log('Click plus')} />
+                            onClickPLus={(obj: any) => onAddToCart(obj)} />
                     )}
 
                 </div>
