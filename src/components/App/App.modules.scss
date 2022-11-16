@@ -25,6 +25,18 @@ body {
 
 }
 
+.search {
+  border: 1px solid #f3f3f3;
+  border-radius: 10px;
+  padding: 0 15px;
+  position: relative;
+
+  .clear {
+    position: absolute;
+    right: 0;
+  }
+}
+
 .content {
   padding: 40px;
 
@@ -83,4 +95,3 @@ body {
     list-style-type: none;
   }
 }
-
