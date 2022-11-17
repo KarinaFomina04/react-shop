@@ -1,4 +1,5 @@
 import React from "react";
+import axios from "axios";
 import Card from "../Card";
 import Drawer from "../Drawer";
 import Header from "../Header";
@@ -12,13 +13,12 @@ const App: React.FC = () => {
     const [cartOpened, setCartOpened] = React.useState(false);
 
     React.useEffect(() => {
-        fetch('https://6366ecd1f5f549f052ce631b.mockapi.io/items')
-            .then((res) => {
-                return res.json();
-            })
-            .then((json) => {
-                setItems(json)
-            });
+        axios.get('https://6366ecd1f5f549f052ce631b.mockapi.io/items').then(res => {
+            setItems(res.data);
+        });
+        axios.get('https://6366ecd1f5f549f052ce631b.mockapi.io/cart').then(res => {
+            setCartItems(res.data);
+        });
     }, []);
 
     type TItem = {
@@ -29,43 +29,55 @@ const App: React.FC = () => {
     };
 
     const onAddToCart = (obj: TItem) => {
+        axios.post('https://6366ecd1f5f549f052ce631b.mockapi.io/cart', obj);
         setCartItems(prev => [...prev, obj]);
+    };
+
+    const onRemoveItem = (id: number) => {
+        //axios.delete(`https://6366ecd1f5f549f052ce631b.mockapi.io/cart/${id}`);
+        setCartItems(prev => prev.filter(item => item.id !== id));
     };
 
     const onRemoveFromCart = (id: number) => {
         setCartItems(prev => prev.filter((item) => item.id !== id));
     };
     const onChangeSearchInput = (event: any) => {
-        setSearchValue(event.target.value); 
+        setSearchValue(event.target.value);
     }
 
     console.log(cartItems)
     return (
         <div className={styles.wrapper}>
-            {cartOpened && <Drawer items={cartItems} onClose={() => setCartOpened(false)} />}
+            {cartOpened && <Drawer items={cartItems} onClose={() => setCartOpened(false)} onRemove={onRemoveItem} />}
             <Header onClickCart={() => setCartOpened(true)} />
             <div className={styles.content}>
                 <div className={styles.titleWithSearch}>
                     <h1>{searchValue ? `search by request: "${searchValue}"` : "All"}</h1>
                     <div className={styles.search}>
                         <img width={18} height={18} src="/img/search.svg" alt="Search" />
-                        <img className={styles.clear} width={11} height={11} src="/img/btn-remove.svg" alt="Close" />
+                        {searchValue && <img
+                            onClick={() => setSearchValue('')}
+                            className={styles.clear}
+                            src="/img/btn-remove.svg" alt="Clear"
+                        />}
                         <input onChange={onChangeSearchInput} value={searchValue} placeholder="Search..." />
 
                     </div>
                 </div>
                 <div className={styles.sneakers}>
-                    {items.map((item: any) =>
-                        <Card
-                            key={item.id}
-                            id={item.id}
-                            title={item.title}
-                            price={item.price}
-                            imageUrl={item.imageUrl}
-                            onClickFavorite={() => console.log('Add to favorites')}
-                            onClickPLus={(obj: any) => onAddToCart(obj)}
-                            onClickMinus={(id: number) => onRemoveFromCart(id)} />
-                    )}
+                    {items
+                        .filter((item: any) => item.title.toLowerCase().includes(searchValue.toLowerCase()))
+                        .map((item: any) =>
+                            <Card
+                                key={item.id}
+                                id={item.id}
+                                title={item.title}
+                                price={item.price}
+                                imageUrl={item.imageUrl}
+                                onClickFavorite={() => console.log('Add to favorites')}
+                                onClickPLus={(obj: any) => onAddToCart(obj)}
+                                onClickMinus={(id: number) => onRemoveFromCart(id)} />
+                        )}
 
                 </div>
             </div>
