@@ -1,7 +1,9 @@
 const prod = process.env.NODE_ENV === 'production';
-
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
+const dotenv = require('dotenv').config({ path: __dirname + '/.env' })
 
 module.exports = {
   mode: prod ? 'production' : 'development',
@@ -38,5 +40,8 @@ module.exports = {
       template: 'index.html',
     }),
     new MiniCssExtractPlugin(),
+    new webpack.DefinePlugin({
+      'process.env': JSON.stringify(dotenv.parsed),
+    }),
   ],
 };

@@ -7,16 +7,20 @@ import styles from './App.modules.scss';
 
 
 const App: React.FC = () => {
+
+    const url = process.env.REACT_APP_API_URL;
+
     const [items, setItems] = React.useState([]);
     const [cartItems, setCartItems] = React.useState<TItem[]>([]);
+    const [favorites, setFavorites] = React.useState<TItem[]>([]);
     const [searchValue, setSearchValue] = React.useState('');
     const [cartOpened, setCartOpened] = React.useState(false);
 
     React.useEffect(() => {
-        axios.get('https://6366ecd1f5f549f052ce631b.mockapi.io/items').then(res => {
+        axios.get(`${url}/items`).then(res => {
             setItems(res.data);
         });
-        axios.get('https://6366ecd1f5f549f052ce631b.mockapi.io/cart').then(res => {
+        axios.get(`${url}/cart`).then(res => {
             setCartItems(res.data);
         });
     }, []);
@@ -29,23 +33,28 @@ const App: React.FC = () => {
     };
 
     const onAddToCart = (obj: TItem) => {
-        axios.post('https://6366ecd1f5f549f052ce631b.mockapi.io/cart', obj);
+        axios.post(`${url}/cart`, obj);
         setCartItems(prev => [...prev, obj]);
     };
 
     const onRemoveItem = (id: number) => {
-        //axios.delete(`https://6366ecd1f5f549f052ce631b.mockapi.io/cart/${id}`);
+        axios.delete(`${url}/cart/${id}`);
         setCartItems(prev => prev.filter(item => item.id !== id));
+    };
+
+    const onAddToFavorite = (obj: TItem) => {
+        axios.post(`${url}/favorites/`, obj);
+        setFavorites(prev => [...prev, obj]);
     };
 
     const onRemoveFromCart = (id: number) => {
         setCartItems(prev => prev.filter((item) => item.id !== id));
     };
+
     const onChangeSearchInput = (event: any) => {
         setSearchValue(event.target.value);
     }
 
-    console.log(cartItems)
     return (
         <div className={styles.wrapper}>
             {cartOpened && <Drawer items={cartItems} onClose={() => setCartOpened(false)} onRemove={onRemoveItem} />}
@@ -74,7 +83,7 @@ const App: React.FC = () => {
                                 title={item.title}
                                 price={item.price}
                                 imageUrl={item.imageUrl}
-                                onClickFavorite={() => console.log('Add to favorites')}
+                                onClickFavorite={(obj: any) => onAddToFavorite(obj)}
                                 onClickPLus={(obj: any) => onAddToCart(obj)}
                                 onClickMinus={(id: number) => onRemoveFromCart(id)} />
                         )}
