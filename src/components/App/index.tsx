@@ -1,16 +1,19 @@
 import React from "react";
 import axios from "axios";
-import Card from "../Card";
+import { Route, Routes } from 'react-router-dom';
 import Drawer from "../Drawer";
 import Header from "../Header";
 import styles from './App.modules.scss';
+
+import Home from "../../pages/Home";
+import Favorites from "../../pages/Favorites";
 
 
 const App: React.FC = () => {
 
     const url = process.env.REACT_APP_API_URL;
 
-    const [items, setItems] = React.useState([]);
+    const [items, setItems] = React.useState<any>([]);
     const [cartItems, setCartItems] = React.useState<TItem[]>([]);
     const [favorites, setFavorites] = React.useState<TItem[]>([]);
     const [searchValue, setSearchValue] = React.useState('');
@@ -59,37 +62,23 @@ const App: React.FC = () => {
         <div className={styles.wrapper}>
             {cartOpened && <Drawer items={cartItems} onClose={() => setCartOpened(false)} onRemove={onRemoveItem} />}
             <Header onClickCart={() => setCartOpened(true)} />
-            <div className={styles.content}>
-                <div className={styles.titleWithSearch}>
-                    <h1>{searchValue ? `search by request: "${searchValue}"` : "All"}</h1>
-                    <div className={styles.search}>
-                        <img width={18} height={18} src="/img/search.svg" alt="Search" />
-                        {searchValue && <img
-                            onClick={() => setSearchValue('')}
-                            className={styles.clear}
-                            src="/img/btn-remove.svg" alt="Clear"
-                        />}
-                        <input onChange={onChangeSearchInput} value={searchValue} placeholder="Search..." />
-
-                    </div>
-                </div>
-                <div className={styles.sneakers}>
-                    {items
-                        .filter((item: any) => item.title.toLowerCase().includes(searchValue.toLowerCase()))
-                        .map((item: any) =>
-                            <Card
-                                key={item.id}
-                                id={item.id}
-                                title={item.title}
-                                price={item.price}
-                                imageUrl={item.imageUrl}
-                                onClickFavorite={(obj: any) => onAddToFavorite(obj)}
-                                onClickPLus={(obj: any) => onAddToCart(obj)}
-                                onClickMinus={(id: number) => onRemoveFromCart(id)} />
-                        )}
-
-                </div>
-            </div>
+            <Routes>
+                <Route path="/" element={<Home
+                    items={items}
+                    searchValue={searchValue}
+                    setSearchValue={setSearchValue}
+                    onChangeSearchInput={onChangeSearchInput}
+                    onAddToFavorite={onAddToFavorite}
+                    onAddToCart={onAddToCart}
+                    onRemoveFromCart={onRemoveFromCart} />}>
+                </Route>
+                <Route path="/favorites" element={<Favorites
+                    searchValue={searchValue}
+                    setSearchValue={setSearchValue}
+                    onChangeSearchInput={onChangeSearchInput}
+                />}>
+                </Route>
+            </Routes>
         </div>
     )
 

@@ -11,7 +11,7 @@ const Card: React.FC<any> = ({ id, title, imageUrl, price, onClickPLus, onClickF
     };
 
     const onFavorite = () => {
-        onClickFavorite()
+        onClickFavorite({id, title, imageUrl, price})
         setFavorite(!favorite);
     };
 
