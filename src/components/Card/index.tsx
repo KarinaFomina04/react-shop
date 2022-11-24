@@ -1,9 +1,9 @@
 import React from "react";
 import styles from './Card.modules.scss';
 
-const Card: React.FC<any> = ({ id, title, imageUrl, price, onClickPLus, onClickFavorite, onClickMinus }) => {
+const Card: React.FC<any> = ({ id, title, imageUrl, price, onClickPLus, onClickFavorite, onClickMinus, favorited = false }) => {
     const [isAdded, setIsAdded] = React.useState(false);
-    const [favorite, setFavorite] = React.useState(false);
+    const [favorite, setFavorite] = React.useState(favorited);
 
     const onPlus = () => {
        isAdded? onClickMinus(id) : onClickPLus({id, title, imageUrl, price});

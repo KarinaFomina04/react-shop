@@ -26,6 +26,9 @@ const App: React.FC = () => {
         axios.get(`${url}/cart`).then(res => {
             setCartItems(res.data);
         });
+        axios.get(`${url}/favorites`).then(res => {
+            setFavorites(res.data);
+        });
     }, []);
 
     type TItem = {
@@ -45,9 +48,18 @@ const App: React.FC = () => {
         setCartItems(prev => prev.filter(item => item.id !== id));
     };
 
-    const onAddToFavorite = (obj: TItem) => {
-        axios.post(`${url}/favorites/`, obj);
-        setFavorites(prev => [...prev, obj]);
+    const onAddToFavorite = async (obj: TItem) => {
+        try {
+            if (favorites.find(item => item.id === obj.id)) {
+                axios.delete(`${url}/favorites/${obj.id}`);
+                setFavorites((prev) => prev.filter(item => item.id !== obj.id));
+            } else {
+                const { data } = await axios.post(`${url}/favorites/`, obj);
+                setFavorites(prev => [...prev, data]);
+            }
+        } catch (error) {
+            alert('Could not add to favorites');
+        }
     };
 
     const onRemoveFromCart = (id: number) => {
@@ -73,9 +85,11 @@ const App: React.FC = () => {
                     onRemoveFromCart={onRemoveFromCart} />}>
                 </Route>
                 <Route path="/favorites" element={<Favorites
+                    items={favorites}
                     searchValue={searchValue}
-                    setSearchValue={setSearchValue}
-                    onChangeSearchInput={onChangeSearchInput}
+                    onAddToFavorite={onAddToFavorite}
+                    onAddToCart={onAddToCart}
+                    onRemoveFromCart={onRemoveFromCart}
                 />}>
                 </Route>
             </Routes>
