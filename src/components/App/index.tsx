@@ -19,16 +19,17 @@ const App: React.FC = () => {
     const [searchValue, setSearchValue] = React.useState('');
     const [cartOpened, setCartOpened] = React.useState(false);
 
-    React.useEffect(() => {
-        axios.get(`${url}/items`).then(res => {
-            setItems(res.data);
-        });
-        axios.get(`${url}/cart`).then(res => {
-            setCartItems(res.data);
-        });
-        axios.get(`${url}/favorites`).then(res => {
-            setFavorites(res.data);
-        });
+    React.useEffect( () => {
+        async function fetchData() {
+            const itemsResponse = await axios.get(`${url}/items`);
+            const cartResponse = await axios.get(`${url}/cart`);
+            const favoritesResponse = await axios.get(`${url}/favorites`);
+
+            setItems(itemsResponse.data);
+            setCartItems(cartResponse.data);
+            setFavorites(favoritesResponse.data);
+        }
+        fetchData();
     }, []);
 
     type TItem = {
@@ -39,8 +40,17 @@ const App: React.FC = () => {
     };
 
     const onAddToCart = (obj: TItem) => {
-        axios.post(`${url}/cart`, obj);
-        setCartItems(prev => [...prev, obj]);
+        try {
+            if (cartItems.find(item => Number(item.id) === Number(obj.id))) {
+                axios.delete(`${url}/cart/${obj.id}`);
+                setCartItems((prev) => prev.filter(item => Number(item.id) !== Number(obj.id)));
+            } else {
+                axios.post(`${url}/cart`, obj);
+                setCartItems(prev => [...prev, obj]);
+            };
+        } catch (error) {
+
+        }
     };
 
     const onRemoveItem = (id: number) => {
@@ -77,6 +87,7 @@ const App: React.FC = () => {
             <Routes>
                 <Route path="/" element={<Home
                     items={items}
+                    cartItems={cartItems}
                     searchValue={searchValue}
                     setSearchValue={setSearchValue}
                     onChangeSearchInput={onChangeSearchInput}

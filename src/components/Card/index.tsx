@@ -1,17 +1,30 @@
 import React from "react";
 import styles from './Card.modules.scss';
+import ContentLoader from "react-content-loader"
 
-const Card: React.FC<any> = ({ id, title, imageUrl, price, onClickPLus, onClickFavorite, onClickMinus, favorited = false }) => {
-    const [isAdded, setIsAdded] = React.useState(false);
+const Card: React.FC<any> = ({
+    id,
+    title,
+    imageUrl,
+    price,
+    onClickPLus,
+    onClickFavorite,
+    onClickMinus,
+    favorited = false,
+    added = false,
+    loading = false
+}) => {
+
+    const [isAdded, setIsAdded] = React.useState(added);
     const [favorite, setFavorite] = React.useState(favorited);
 
     const onPlus = () => {
-       isAdded? onClickMinus(id) : onClickPLus({id, title, imageUrl, price});
+        isAdded ? onClickMinus(id) : onClickPLus({ id, title, imageUrl, price });
         setIsAdded(!isAdded);
     };
 
     const onFavorite = () => {
-        onClickFavorite({id, title, imageUrl, price})
+        onClickFavorite({ id, title, imageUrl, price })
         setFavorite(!favorite);
     };
 

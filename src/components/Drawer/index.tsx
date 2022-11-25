@@ -20,7 +20,7 @@ const Drawer: React.FC<any> = ({ onClose, onRemove, items = [] }) => {
                         <div>
                             <div className={styles.items}>
                                 {items.map((obj: any) => (
-                                    <div className={styles.cartItem}>
+                                    <div key={obj.id} className={styles.cartItem}>
                                         <img className={styles.cartImage} width={70} height={70} src={obj.imageUrl} alt="Sneackers" />
                                         <div className={styles.cartInfo}>
                                             <p>{obj.title}</p>
