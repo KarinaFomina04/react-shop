@@ -18,12 +18,16 @@ const App: React.FC = () => {
     const [favorites, setFavorites] = React.useState<TItem[]>([]);
     const [searchValue, setSearchValue] = React.useState('');
     const [cartOpened, setCartOpened] = React.useState(false);
+    const [isLoading, setIsLoading] = React.useState(true);
 
     React.useEffect( () => {
         async function fetchData() {
+            setIsLoading(true);
             const itemsResponse = await axios.get(`${url}/items`);
             const cartResponse = await axios.get(`${url}/cart`);
             const favoritesResponse = await axios.get(`${url}/favorites`);
+
+            setIsLoading(false);
 
             setItems(itemsResponse.data);
             setCartItems(cartResponse.data);
@@ -93,7 +97,9 @@ const App: React.FC = () => {
                     onChangeSearchInput={onChangeSearchInput}
                     onAddToFavorite={onAddToFavorite}
                     onAddToCart={onAddToCart}
-                    onRemoveFromCart={onRemoveFromCart} />}>
+                    onRemoveFromCart={onRemoveFromCart}
+                    isLoading={isLoading} 
+                    />}>
                 </Route>
                 <Route path="/favorites" element={<Favorites
                     items={favorites}
