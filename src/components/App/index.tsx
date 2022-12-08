@@ -7,6 +7,8 @@ import styles from './App.modules.scss';
 
 import Home from "../../pages/Home";
 import Favorites from "../../pages/Favorites";
+import AppContext from "../../pages/context";
+import { TItem } from "../../type";
 
 
 const App: React.FC = () => {
@@ -36,12 +38,7 @@ const App: React.FC = () => {
         fetchData();
     }, []);
 
-    type TItem = {
-        id: number;
-        title: string;
-        imageUrl: string;
-        price: number;
-    };
+
 
     const onAddToCart = (obj: TItem) => {
         try {
@@ -85,7 +82,8 @@ const App: React.FC = () => {
     }
 
     return (
-        <div className={styles.wrapper}>
+        <AppContext.Provider value={{items, cartItems, favorites}}>
+            <div className={styles.wrapper}>
             {cartOpened && <Drawer items={cartItems} onClose={() => setCartOpened(false)} onRemove={onRemoveItem} />}
             <Header onClickCart={() => setCartOpened(true)} />
             <Routes>
@@ -99,7 +97,7 @@ const App: React.FC = () => {
                     onAddToCart={onAddToCart}
                     onRemoveFromCart={onRemoveFromCart}
                     isLoading={isLoading} 
-                    />}>
+                    />}> 
                 </Route>
                 <Route path="/favorites" element={<Favorites
                     items={favorites}
@@ -111,6 +109,7 @@ const App: React.FC = () => {
                 </Route>
             </Routes>
         </div>
+    </AppContext.Provider>
     )
 
 }
